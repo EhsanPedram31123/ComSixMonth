@@ -1,0 +1,173 @@
+<file_generation>
+content: |
+  <!DOCTYPE html>
+  <html lang="fa" dir="rtl">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>داشبورد عملکرد فروش استان‌ها</title>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <style>
+          @font-face {
+              font-family: 'Vazir';
+              src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir.woff2') format('woff2');
+          }
+          body {
+              font-family: 'Vazir', Tahoma, sans-serif;
+              background-color: #f4f7f6;
+              margin: 0;
+              padding: 20px;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+          }
+          .container {
+              background-color: #fff;
+              padding: 30px;
+              border-radius: 15px;
+              box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+              width: 90%;
+              max-width: 800px;
+          }
+          h2 {
+              color: #2c3e50;
+              text-align: center;
+              margin-bottom: 30px;
+          }
+          .controls {
+              margin-bottom: 20px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              gap: 15px;
+          }
+          select {
+              padding: 10px 15px;
+              font-family: 'Vazir';
+              font-size: 16px;
+              border-radius: 8px;
+              border: 1px solid #ddd;
+              outline: none;
+              cursor: pointer;
+              background-color: #fff;
+          }
+          select:focus {
+              border-color: #3498db;
+          }
+          label {
+              font-weight: bold;
+              color: #34495e;
+          }
+          canvas {
+              max-height: 400px;
+          }
+          .footer {
+              margin-top: 20px;
+              font-size: 12px;
+              color: #7f8c8d;
+          }
+      </style>
+  </head>
+  <body>
+
+  <div class="container">
+
+    <h2>📊 نمودار روند درآمدی استان‌ها (۱۴۰۲ - ۱۴۰۵)</h2>
+
+      <div class="controls">
+          <label for="provinceSelect">انتخاب نام استان:</label>
+          <select id="provinceSelect" onchange="updateChart()">
+              <option value="هرمزگان">هرمزگان</option>
+              <option value="تهران">تهران</option>
+              <option value="اصفهان">اصفهان</option>
+              <option value="فارس">فارس</option>
+          </select>
+      </div>
+
+      <canvas id="revenueChart"></canvas>
+  </div>
+
+  <div class="footer">طراحی شده برای داشبورد گزارش فروش - ۱۴۰۵</div>
+
+  <script>
+      // دیتای استان‌ها (بر اساس عکس ارسالی شما)
+      const salesData = {
+          "هرمزگان": [118000000, 86000000, 102500000, 284800000],
+          "تهران": [450000000, 480000000, 520000000, 600000000],
+          "اصفهان": [200000000, 210000000, 195000000, 250000000],
+          "فارس": [150000000, 175000000, 210000000, 190000000]
+      };
+
+      const labels = ['۱۴۰۲', '۱۴۰۳', '۱۴۰۴', '۱۴۰۵'];
+      let ctx = document.getElementById('revenueChart').getContext('2d');
+      let myChart;
+
+      function initChart(province) {
+          const data = {
+              labels: labels,
+              datasets: [{
+                  label: 'درآمد (تومان)',
+                  data: salesData[province],
+                  fill: true,
+                  backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                  borderColor: 'rgba(52, 152, 219, 1)',
+                  borderWidth: 3,
+                  tension: 0.4, // برای منحنی شدن خط
+                  pointBackgroundColor: 'rgba(44, 62, 80, 1)',
+                  pointRadius: 5
+              }]
+          };
+
+          const config = {
+              type: 'line',
+              data: data,
+              options: {
+                  responsive: true,
+                  plugins: {
+                      legend: {
+                          display: true,
+                          labels: { font: { family: 'Vazir' } }
+                      },
+                      tooltip: {
+                          bodyFont: { family: 'Vazir' },
+                          titleFont: { family: 'Vazir' }
+                      }
+                  },
+                  scales: {
+                      y: {
+                          beginAtZero: false,
+                          ticks: {
+                              font: { family: 'Vazir' },
+                              callback: function(value) {
+                                  return value.toLocaleString() + ' تومان';
+                              }
+                          }
+                      },
+                      x: {
+                          ticks: { font: { family: 'Vazir' } }
+                      }
+                  }
+              }
+          };
+
+          myChart = new Chart(ctx, config);
+      }
+
+      function updateChart() {
+          const selectedProvince = document.getElementById('provinceSelect').value;
+          myChart.data.datasets[0].data = salesData[selectedProvince];
+          myChart.update();
+      }
+
+      // اجرای اولیه نمودار با هرمزگان
+      window.onload = () => {
+          initChart('هرمزگان');
+      };
+  </script>
+
+  </body>
+  </html>
+content_format: html
+filename: sales_dashboard.html
+format: html
+</file_generation>
